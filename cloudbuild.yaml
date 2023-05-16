@@ -1,0 +1,21 @@
+substitutions:
+  _SERVICE_NAME: nginx-php-fpm-example
+steps:
+  - id: 'build-nginx-image'
+    name: 'gcr.io/kaniko-project/executor:latest'
+    args:
+      - --destination=gcr.io/$PROJECT_ID/$_SERVICE_NAME-nginx:latest
+      - --dockerfile=./docker/nginx/Dockerfile
+      - --cache=true
+      - --cache-ttl=24h
+    waitFor:
+      - '-'
+  - id: 'build-php-image'
+    name: 'gcr.io/kaniko-project/executor:latest'
+    args:
+      - --destination=gcr.io/$PROJECT_ID/$_SERVICE_NAME-php:latest
+      - --dockerfile=./docker/php/Dockerfile
+      - --cache=true
+      - --cache-ttl=24h
+    waitFor:
+      - '-'
